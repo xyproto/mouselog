@@ -1,2 +1,5 @@
-# mouselog
-Small script for recording mouse distance travelled over time to a CSV file
+# mouselog 0.1
+
+* Log mouse distance over time to a CSV file.
+* Also display a simple graph on the console.
+* MIT licensed
