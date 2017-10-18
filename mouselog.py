@@ -91,15 +91,16 @@ class MouseCollector:
     def __str__(self):
         return self.stats(full=True)
 
-def log_mouse(output_file="output.csv", log_resolution=60, stat_lines=40, while_function=lambda x: True):
+def log_mouse(output_file="output.csv", log_resolution=60, stat_lines=40, while_function=lambda x: True, verbose=False, mouse_device="/dev/input/mice"):
     """log_resolution is in seconds, and is the "buckets" where mouse distances are logged, the while_function returns True as long as the logging should continue, and receives the elapsed time in seconds"""
     timestamp_start = time.time()
-    mc = MouseCollector("/dev/input/mice", output_file)
+    mc = MouseCollector(mouse_device, output_file)
     while while_function(time.time() - timestamp_start):
         start_time = time.time()
         while (time.time() - start_time) < log_resolution:
             mc.update()
-        print(mc.stats(stat_lines=stat_lines))
+        if verbose:
+            print(mc.stats(stat_lines=stat_lines))
         mc.next(timestamp_start)
         mc.write()
     return mc
@@ -107,7 +108,7 @@ def log_mouse(output_file="output.csv", log_resolution=60, stat_lines=40, while_
 def main():
     mc = None
     try:
-        mc = log_mouse("/tmp/output.csv", 1)
+        mc = log_mouse("/tmp/output.csv", 1, verbose=True)
     except KeyboardInterrupt:
         print(mc)
 
