@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# mouselog 0.1
+# mouselog 0.1.0
 #
 # Log mouse distance over time to a CSV file.
 # Also display a simple graph on the console.
@@ -10,9 +10,9 @@
 #
 # Thanks to meuh at https://unix.stackexchange.com/a/397985/3920 for the unpack + euler distance calculation.
 #
-# oct 2017
+# Oct 2017
 #
-# Alexander F Rødseth <xyproto@archlinux.org>
+# Alexander F. Rødseth <xyproto@archlinux.org>
 # MIT licensed
 #
 
@@ -21,6 +21,7 @@ import csv
 import time
 import struct
 import sys
+
 
 class MouseCollector:
 
@@ -58,7 +59,7 @@ class MouseCollector:
     def next(self, timestamp_start):
         self.counter += 1
         self.timestamp = int(time.time() - timestamp_start)
-    
+
     def write(self):
         writer = csv.writer(self.csv)
         for key, value in self.distance.items():
@@ -67,7 +68,6 @@ class MouseCollector:
             writer.writerow([key, value, self.total])
             self.written.append(key)
         self.csv.flush()
-        #print("Wrote to", self.csv.name)
 
     def stats(self, full=False, stat_lines=10):
         if full:
@@ -91,6 +91,7 @@ class MouseCollector:
     def __str__(self):
         return self.stats(full=True)
 
+
 def log_mouse(output_file="output.csv", log_resolution=60, stat_lines=40, while_function=lambda x: True, verbose=False, mouse_device="/dev/input/mice"):
     """log_resolution is in seconds, and is the "buckets" where mouse distances are logged, the while_function returns True as long as the logging should continue, and receives the elapsed time in seconds"""
     timestamp_start = time.time()
@@ -105,12 +106,14 @@ def log_mouse(output_file="output.csv", log_resolution=60, stat_lines=40, while_
         mc.write()
     return mc
 
+
 def main():
     mc = None
     try:
         mc = log_mouse("/tmp/output.csv", 1, verbose=True)
     except KeyboardInterrupt:
         print(mc)
+
 
 if __name__ == "__main__":
     main()
